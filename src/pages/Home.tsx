@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import axios from 'axios';
+import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import { Product, Banner } from '../types';
 
@@ -15,12 +15,36 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, bannersRes] = await Promise.all([
-          axios.get('/api/products'),
-          axios.get('/api/banners')
-        ]);
-        setProducts(productsRes.data);
-        setBanners(bannersRes.data);
+        // Fetch Products
+        const { data: productsData, error: productsError } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (productsError) throw productsError;
+
+        // Fetch Banners
+        const { data: bannersData, error: bannersError } = await supabase
+          .from('banners')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (bannersError) throw bannersError;
+
+        setProducts(productsData || []);
+        
+        // Map banners to match interface if needed (Supabase returns snake_case, types might be camelCase)
+        // Check types.ts to be sure, but assuming direct mapping for now or manual mapping
+        const mappedBanners = bannersData?.map((b: any) => ({
+          id: b.id,
+          image: b.image,
+          title: b.title,
+          subtitle: b.subtitle,
+          buttonText: b.button_text, // Map snake_case to camelCase
+          link: b.link
+        })) || [];
+
+        setBanners(mappedBanners);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

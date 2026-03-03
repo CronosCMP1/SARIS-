@@ -53,9 +53,10 @@ const upload = multer({ storage: storage });
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   // Hardcoded credentials as requested
-  if (username === 'saris2412' && password === '245178s') {
+  if (username?.trim() === 'saris2412' && password?.trim() === '245178s') {
     res.json({ success: true, token: 'admin-token-' + Date.now() });
   } else {
+    console.log('Login failed for:', username);
     res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
 });

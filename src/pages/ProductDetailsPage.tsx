@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import { supabase } from '../lib/supabase';
 import { MessageCircle, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { Product } from '../types';
 
@@ -14,11 +14,18 @@ export default function ProductDetailsPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`/api/products/${id}`);
-        setProduct(response.data);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+        
+        setProduct(data);
         // Select first size by default if available
-        if (response.data.sizes && response.data.sizes.length > 0) {
-          setSelectedSize(response.data.sizes[0]);
+        if (data.sizes && data.sizes.length > 0) {
+          setSelectedSize(data.sizes[0]);
         }
       } catch (error) {
         console.error('Error fetching product:', error);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
 
@@ -16,8 +16,14 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('/api/products');
-        let filteredProducts = response.data;
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        let filteredProducts = data || [];
 
         if (tagFilter) {
           filteredProducts = filteredProducts.filter((p: Product) => 
