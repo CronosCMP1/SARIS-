@@ -146,30 +146,6 @@ export default function Home() {
         )}
       </section>
 
-      {/* Categories Banner */}
-      <section className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { title: 'Buquês', img: 'https://images.unsplash.com/photo-1591886960571-74d43a9d4166?q=80&w=800&auto=format&fit=crop' },
-            { title: 'Vasos', img: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?q=80&w=800&auto=format&fit=crop' },
-            { title: 'Orquídeas', img: 'https://images.unsplash.com/photo-1566938064504-a38b5816a172?q=80&w=800&auto=format&fit=crop' },
-          ].map((cat, idx) => (
-            <div key={idx} className="relative h-96 group overflow-hidden cursor-pointer">
-              <img 
-                src={cat.img} 
-                alt={cat.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                <div className="bg-white/90 px-8 py-4 text-center min-w-[200px]">
-                  <h3 className="text-lg font-medium uppercase tracking-widest">{cat.title}</h3>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Products Section */}
       <section className="container mx-auto px-4 pb-16">
         <div className="text-center mb-12">
