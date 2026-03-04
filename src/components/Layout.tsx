@@ -159,6 +159,16 @@ export default function Layout({ children, isAdmin }: LayoutProps) {
         </div>
       </motion.header>
 
+      {/* Edge Swipe Trigger for Opening Menu */}
+      <motion.div 
+        className="fixed top-0 bottom-0 left-0 w-8 z-40 md:hidden"
+        onPanEnd={(e, info) => {
+            if (info.offset.x > 50) {
+                setIsMobileMenuOpen(true);
+            }
+        }}
+      />
+
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -173,6 +183,15 @@ export default function Layout({ children, isAdmin }: LayoutProps) {
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              drag="x"
+              dragConstraints={{ right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(e, info) => {
+                if (info.offset.x < -100 || info.velocity.x < -500) {
+                  setIsMobileMenuOpen(false);
+                }
+              }}
               className="bg-white w-[85%] max-w-[300px] h-full p-6 shadow-2xl"
               onClick={e => e.stopPropagation()}
             >

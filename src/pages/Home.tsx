@@ -63,7 +63,7 @@ export default function Home() {
       title: "COLEÇÃO PRIMAVERA",
       subtitle: "A elegância das flores naturais",
       buttonText: "VER COLEÇÃO",
-      link: "#"
+      link: "/mais-vendidos"
     }
   ];
 
