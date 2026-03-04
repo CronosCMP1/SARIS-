@@ -76,7 +76,7 @@ export default function ProductDetailsPage() {
   };
 
   const whatsappMessage = `Olá! Tenho interesse no produto ${product.name} ${selectedSize ? `(Tamanho: ${selectedSize})` : ''} no valor de ${formatPrice(product.price)}.`;
-  const whatsappLink = `https://wa.me/5511999999999?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappLink = `https://wa.me/5561992143032?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="container mx-auto px-4 py-12">
