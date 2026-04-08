@@ -78,6 +78,34 @@ export default function ProductDetailsPage() {
   const whatsappMessage = `Olá! Tenho interesse no produto ${product.name} ${selectedSize ? `(Tamanho: ${selectedSize})` : ''} no valor de ${formatPrice(product.price)}.`;
   const whatsappLink = `https://wa.me/5561992143032?text=${encodeURIComponent(whatsappMessage)}`;
 
+  const handleWhatsAppClick = () => {
+    // Meta Pixel Tracking
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: product.name,
+        content_ids: [product.id],
+        content_type: 'product',
+        value: product.price,
+        currency: 'BRL'
+      });
+    }
+    // Google Tag Manager Tracking
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'whatsapp_click',
+        ecommerce: {
+          items: [{
+            item_name: product.name,
+            item_id: product.id,
+            price: product.price,
+            currency: 'BRL',
+            item_variant: selectedSize || undefined
+          }]
+        }
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
       <Link to="/" className="inline-flex items-center text-gray-500 hover:text-[#4B5320] mb-8 transition-colors">
@@ -178,6 +206,7 @@ export default function ProductDetailsPage() {
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={handleWhatsAppClick}
             className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#128C7E] text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <MessageCircle size={24} />

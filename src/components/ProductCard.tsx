@@ -32,6 +32,33 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const whatsappMessage = `Olá! Tenho interesse no produto ${product.name} no valor de ${formatPrice(product.price)}.`;
   const whatsappLink = `https://wa.me/5561992143032?text=${encodeURIComponent(whatsappMessage)}`;
 
+  const handleWhatsAppClick = () => {
+    // Meta Pixel Tracking
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: product.name,
+        content_ids: [product.id],
+        content_type: 'product',
+        value: product.price,
+        currency: 'BRL'
+      });
+    }
+    // Google Tag Manager Tracking
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'whatsapp_click',
+        ecommerce: {
+          items: [{
+            item_name: product.name,
+            item_id: product.id,
+            price: product.price,
+            currency: 'BRL'
+          }]
+        }
+      });
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -91,6 +118,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           href={whatsappLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={handleWhatsAppClick}
           className="mt-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-colors shadow-sm hover:shadow-md mx-auto w-full max-w-[200px]"
         >
           <MessageCircle size={14} />
