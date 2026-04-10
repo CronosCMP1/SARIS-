@@ -17,5 +17,12 @@ export const useTracking = () => {
         page_path: location.pathname + location.search,
       });
     }
+
+    // Dispara o PageView do Google Ads (gtag)
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('config', 'AW-16873329697', {
+        page_path: location.pathname + location.search,
+      });
+    }
   }, [location]);
 };
